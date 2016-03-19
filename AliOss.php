@@ -1,19 +1,19 @@
 <?php
-namespace common\extensions;
+namespace colee\oss;
 use yii\base\Component;
 require_once __DIR__.'/aliyun-php-sdkv2-20130815/aliyun.php';
 /**
  * 
- * @author colee
+ * @author CoLee
  * @use eg: 'oss'=>[
-            'class'=>'common\extensions\AliOss',
-            'bucket'=>'99n9',
-            'prefix'=>'chisheng/',
-            'AccessKeyId' => '1rMj0YUwsbaNHGTu',
-            'AccessKeySecret' => '9gjdSKPBkE3ksPzzRl9dW9rj7x4Evx',
-            'domain'=>'http://99n9.oss-cn-hangzhou.aliyuncs.com/',
-            'imageHost' => 'http://99n9.img-cn-hangzhou.aliyuncs.com/'
-        ],
+ *           'class'=>'common\extensions\AliOss',
+ *           'bucket'=>'99n9',
+ *           'prefix'=>'chisheng/',
+ *           'AccessKeyId' => '',
+ *           'AccessKeySecret' => '',
+ *           'domain'=>'http://99n9.oss-cn-hangzhou.aliyuncs.com/',
+ *           'imageHost' => 'http://99n9.img-cn-hangzhou.aliyuncs.com/'
+ *       ],
  */
 class AliOss extends Component
 {
