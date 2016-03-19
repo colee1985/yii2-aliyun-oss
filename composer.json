@@ -1,0 +1,34 @@
+{
+    "name": "colee/yii2-oss",
+    "type": "library",
+    "description": "Aliyun OSS library for Yii2 framework",
+    "keywords": [
+        "yii2",
+        "colee",
+        "Aliyun",
+        "OSS",
+        "yii2-oss",
+        "widget"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/colee1985/yii2-oss",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "colee",
+            "email": "5969226@qq.com",
+            "issues": "https://github.com/colee1985/yii2-oss/issues?state=open",
+        	"source": "https://github.com/colee1985/yii2-oss"
+        }
+    ],
+    "require": {
+        "php" : "~5.5|~7.0",
+        "yiisoft/yii2-bootstrap": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "colee\\oss\\": ""
+        }
+    }
+}
+
