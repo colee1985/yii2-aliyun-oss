@@ -54,12 +54,15 @@ class AliOss extends Component
     /**
      * 上传文件流到OSS
      */
-    public function uploadStream2oss($stream,$filename)
+    public function uploadStream2oss($stream,$path=null)
     {
         try {
+            if (empty($path)){
+                $path = date('Ymd').mb_substr(md5($stream), -8);
+            }
             return $this->client->putObject(array(
                 'Bucket' => $this->bucket,
-                'Key' => $this->prefix.$filename,
+                'Key' => $this->prefix.$path,
                 'Content' => $stream,
             ));
         } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
