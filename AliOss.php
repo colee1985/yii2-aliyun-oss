@@ -84,6 +84,14 @@ class AliOss extends Component
         return $this->imageHost.$this->prefix.$path.'@!'.$style;
     }
     /**
+     * 通过原图地址获取缩略图
+     * @param unknown $raw_url
+     */
+    public function getThumbnailByRawUrl($raw_url, $style='m')
+    {
+        return $raw_url.'@!'.$style;
+    }
+    /**
      * 获取资源
      * @param unknown $path
      * @return string
