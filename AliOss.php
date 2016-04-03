@@ -81,6 +81,10 @@ class AliOss extends Component
         if (empty($path)){
             return '';
         }
+        // 如果style为空则取原图
+        if (empty($style)){
+            return $this->imageHost.$this->prefix.$path;
+        }
         return $this->imageHost.$this->prefix.$path.'@!'.$style;
     }
     /**
