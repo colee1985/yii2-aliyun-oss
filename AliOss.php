@@ -60,11 +60,12 @@ class AliOss extends Component
             if (empty($path)){
                 $path = date('Ymd').mb_substr(md5($stream), -8);
             }
-            return $this->client->putObject(array(
+            $this->client->putObject(array(
                 'Bucket' => $this->bucket,
                 'Key' => $this->prefix.$path,
                 'Content' => $stream,
             ));
+            return $path;
         } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
             throw new \ErrorException( "Error: " . $ex->getErrorCode() . "\n");
         } catch (\Aliyun\Common\Exceptions\ClientException $ex) {
@@ -74,24 +75,19 @@ class AliOss extends Component
     /**
      * 获取图片地址
      * @param string $path 路径
-     * @param string $style 样式
      */
-    public function getImageUrl($path, $style='m')
+    public function getImageUrl($path)
     {
         if (empty($path)){
             return '';
         }
-        // 如果style为空则取原图
-        if (empty($style)){
-            return $this->imageHost.$this->prefix.$path;
-        }
-        return $this->imageHost.$this->prefix.$path.'@!'.$style;
+        return $this->imageHost.$this->prefix.$path;
     }
     /**
      * 通过原图地址获取缩略图
      * @param unknown $raw_url
      */
-    public function getThumbnailByRawUrl($raw_url, $style='m')
+    public function getThumbnailByUrl($raw_url, $style='m')
     {
         return $raw_url.'@!'.$style;
     }

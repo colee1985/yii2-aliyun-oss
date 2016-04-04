@@ -26,6 +26,7 @@ usage
 \Yii::$app->oss->upload2oss($tempName, $path=null); // 将文件上传
 \Yii::$app->oss->uploadStream2oss($stream,$path=null); // 将字节流上传
 \Yii::$app->oss->getItem($path);  // 获取文件访问路径
-\Yii::$app->oss->getImageUrl($path, $style); // 获取图片路径,OSS必须开启图片服务,$style对应尺寸样式
+\Yii::$app->oss->getImageUrl($path); // 获取图片路径,OSS必须开启图片服务
+\Yii::$app->oss->getThumbnailByUrl($raw_url, $style); // $raw_url图片地址，$style对应尺寸样式
 ```
 更多方法请参考 /aliyun-php-sdkv2-20130815/src/Aliyun/OSS/OSSClient.php
