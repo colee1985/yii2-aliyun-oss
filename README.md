@@ -16,7 +16,7 @@ usage
     'prefix'=>'chisheng/',
     'AccessKeyId' => '你的AccessKeyId',
     'AccessKeySecret' => '你的AccessKeySecret', 
-    'domain'=>'http://99n9.oss-cn-hangzhou.aliyuncs.com/', // 资源访问地址
+    'endpoint'=>'oss-cn-hangzhou.aliyuncs.com', // 资源访问地址
     'imageHost' => 'http://99n9.img-cn-hangzhou.aliyuncs.com/' //如果你的OSS backet开启的图片服务就可以配置这里
 ],
 ```
@@ -25,8 +25,7 @@ usage
 ``` php
 \Yii::$app->oss->upload2oss($tempName, $path=null); // 将文件上传
 \Yii::$app->oss->uploadStream2oss($stream,$path=null); // 将字节流上传
-\Yii::$app->oss->getItem($path);  // 获取文件访问路径
-\Yii::$app->oss->getImageUrl($path); // 获取图片路径,OSS必须开启图片服务
-\Yii::$app->oss->getThumbnailByUrl($raw_url, $style); // $raw_url图片地址，$style对应尺寸样式
+\Yii::$app->oss->getItem($path);  // 获取源文件访问URL，$path为资源在OSS中的路径
+\Yii::$app->oss->getImageUrl($path, $style); // 获取缩略图URL，$style对应尺寸样式(在OSS图片服务中定义)
 ```
-更多方法请参考 /aliyun-php-sdkv2-20130815/src/Aliyun/OSS/OSSClient.php
+更多方法请参考 /aliyun-oss-php-sdk-2.2.1/src/OSS/OssClient.php

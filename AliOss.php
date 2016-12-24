@@ -1,36 +1,41 @@
 <?php
-namespace colee\oss;
+namespace common\extensions;
 use yii\base\Component;
-require_once __DIR__.'/aliyun-php-sdkv2-20130815/aliyun.php';
+use OSS\Core\OssException;
+require_once __DIR__.'/aliyun-oss-php-sdk-2.2.1/autoload.php';
 /**
  * 
- * @author CoLee
- * @use eg: 'oss'=>[
- *           'class'=>'common\extensions\AliOss',
- *           'bucket'=>'99n9',
- *           'prefix'=>'chisheng/',
- *           'AccessKeyId' => '',
- *           'AccessKeySecret' => '',
- *           'domain'=>'http://99n9.oss-cn-hangzhou.aliyuncs.com/',
- *           'imageHost' => 'http://99n9.img-cn-hangzhou.aliyuncs.com/'
- *       ],
+ * @author colee
+ * 'oss'=>[
+ *          'class'=>'common\extensions\AliOss',
+ *          'bucket'=>'99n9',
+ *          'prefix'=>'chisheng/',
+ *          'AccessKeyId' => '1rMj0YUwsbaNHGTu',
+ *          'AccessKeySecret' => '9gjdSKPBkE3ksPzzRl9dW9rj7x4Evx',
+ *          'endpoint'=>'oss-cn-hangzhou.aliyuncs.com',
+ *          'imageHost' => 'http://99n9.img-cn-hangzhou.aliyuncs.com/'
+ *      ],
  */
 class AliOss extends Component
 {
     public $bucket = '99n9';
-    public $prefix = 'didawang/';   //路径前缀
+    public $prefix = 'chisheng/';   //路径前缀
     public $AccessKeyId = '';
     public $AccessKeySecret = '';
-    public $domain = 'http://99n9.oss-cn-hangzhou.aliyuncs.com/';
+    public $endpoint = 'oss-cn-hangzhou.aliyuncs.com';
     public $imageHost = 'http://99n9.img-cn-hangzhou.aliyuncs.com/';
     
     private $client;
     public function init()
     {
-        $this->client = \Aliyun\OSS\OSSClient::factory([
-            'AccessKeyId' => $this->AccessKeyId,
-            'AccessKeySecret' => $this->AccessKeySecret,
-        ]);
+        if (empty($this->imageHost)) {
+            $this->imageHost = 'http://'.$this->bucket.'/'.$this->endpoint.'/';
+        }
+        try {
+            $this->client = new \OSS\OssClient($this->AccessKeyId, $this->AccessKeySecret, $this->endpoint);
+        } catch (OssException $e) {
+            print $e->getMessage();
+        }
     }
     public function upload2oss($tempName, $path=null)
     {
@@ -39,69 +44,34 @@ class AliOss extends Component
             if (empty($path)){
                 $path = date('Ymd').mb_substr(md5($stream), -8);
             }
-            $this->client->putObject(array(
-                'Bucket' => $this->bucket,
-                'Key' => $this->prefix.$path,
-                'Content' => $stream,
-            ));
+            $this->client->putObject($this->bucket, $this->prefix.$path, $stream);
             return $path;
-        } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
-            throw new \ErrorException( "Error: " . $ex->getErrorCode() . "\n");
-        } catch (\Aliyun\Common\Exceptions\ClientException $ex) {
-            throw new \ErrorException( "ClientError: " . $ex->getMessage() . "\n" );
+        } catch (OssException $ex) {
+            throw new \ErrorException( "Error: " . $ex->getMessage() . "\n");
         }
     }
     /**
      * 上传文件流到OSS
      */
-    public function uploadStream2oss($stream,$path=null)
+    public function uploadStream2oss($stream,$filename)
     {
         try {
-            if (empty($path)){
-                $path = date('Ymd').mb_substr(md5($stream), -8);
-            }
-            $this->client->putObject(array(
-                'Bucket' => $this->bucket,
-                'Key' => $this->prefix.$path,
-                'Content' => $stream,
-            ));
-            return $path;
-        } catch (\Aliyun\OSS\Exceptions\OSSException $ex) {
-            throw new \ErrorException( "Error: " . $ex->getErrorCode() . "\n");
-        } catch (\Aliyun\Common\Exceptions\ClientException $ex) {
-            throw new \ErrorException( "ClientError: " . $ex->getMessage() . "\n" );
+            return $this->client->putObject( $this->bucket, $this->prefix.$filename, $stream);
+        } catch (OSSException $ex) {
+            throw new \ErrorException( "Error: " . $ex->getMessage() . "\n");
         }
     }
     /**
      * 获取图片地址
      * @param string $path 路径
+     * @param string $style 样式
      */
-    public function getImageUrl($path)
+    public function getImageUrl($path, $style=null)
     {
-        if (empty($path)){
-            return '';
+        if (empty($style)){
+            return $this->imageHost.$this->prefix.$path;
         }
-        return $this->imageHost.$this->prefix.$path;
-    }
-    /**
-     * 通过原图地址获取缩略图
-     * @param unknown $raw_url
-     */
-    public function getThumbnailByUrl($raw_url, $style='m')
-    {
-        return $raw_url.'@!'.$style;
-    }
-    /**
-     * 获取资源
-     * @param unknown $path
-     * @return string
-     */
-    public function getItem($path)
-    {
-        if (empty($path)){
-            return '';
-        }
-        return $this->domain.$this->prefix.$path;
+        return $this->imageHost.$this->prefix.$path.'@!'.$style;
     }
     
     public function __call($method_name, $args)
